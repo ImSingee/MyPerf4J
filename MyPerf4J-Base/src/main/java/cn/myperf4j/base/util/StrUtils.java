@@ -79,12 +79,16 @@ public final class StrUtils {
         return isNotEmpty(str) && str.charAt(str.length() - 1) == ch;
     }
 
+    public static String trimToEmpty(String str) {
+        return isEmpty(str) ? "" : str.trim();
+    }
+
     public static List<String> splitAsList(final String str, final char separatorChar) {
         if (str == null || str.isEmpty()) {
             return Collections.emptyList();
         }
 
-        List<String> result = new ArrayList<>();
+        final List<String> result = new ArrayList<>();
         splitWorker(str, separatorChar, false, result);
         return result;
     }
@@ -111,7 +115,7 @@ public final class StrUtils {
             i++;
         }
 
-        if (match || (preserveAllTokens && lastMatch)) {
+        if (match || preserveAllTokens && lastMatch) {
             list.add(str.substring(start, i));
         }
     }
@@ -120,8 +124,8 @@ public final class StrUtils {
      * Decode a 2-digit hex byte from within a string.
      */
     public static byte decodeHexByte(CharSequence s, int pos) {
-        int hi = decodeHexNibble(s.charAt(pos));
-        int lo = decodeHexNibble(s.charAt(pos + 1));
+        final int hi = decodeHexNibble(s.charAt(pos));
+        final int lo = decodeHexNibble(s.charAt(pos + 1));
         if (hi == -1 || lo == -1) {
             throw new IllegalArgumentException(String.format(
                     "invalid hex byte '%s' at index %d of '%s'", s.subSequence(pos, pos + 2), pos, s));

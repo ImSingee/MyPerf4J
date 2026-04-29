@@ -6,7 +6,7 @@
 
 一个针对高并发、低延迟应用设计的高性能 Java 性能监控和统计工具。
 
-[![GitHub (pre-)release](https://img.shields.io/github/release/LinShunKang/MyPerf4J/all.svg)](https://github.com/LinShunKang/MyPerf4J) [![Build Status](https://travis-ci.com/LinShunKang/MyPerf4J.svg?branch=develop)](https://travis-ci.com/LinShunKang/MyPerf4J) [![Coverage Status](https://coveralls.io/repos/github/LinShunKang/MyPerf4J/badge.svg?branch=develop)](https://coveralls.io/github/LinShunKang/MyPerf4J?branch=develop) [![GitHub issues](https://img.shields.io/github/issues/LinShunKang/MyPerf4J.svg)](https://github.com/LinShunKang/MyPerf4J/issues) [![GitHub closed issues](https://img.shields.io/github/issues-closed/LinShunKang/MyPerf4J.svg)](https://github.com/LinShunKang/MyPerf4J/issues?q=is%3Aissue+is%3Aclosed) [![GitHub](https://img.shields.io/github/license/LinShunKang/MyPerf4J.svg)](./LICENSE)
+[![GitHub (pre-)release](https://img.shields.io/github/release/LinShunKang/MyPerf4J/all.svg)](https://github.com/LinShunKang/MyPerf4J) [![Build Status](https://app.travis-ci.com/LinShunKang/MyPerf4J.svg?token=ptySgyLwQwqyUv5eCp5Q&branch=develop)](https://app.travis-ci.com/LinShunKang/MyPerf4J) [![Coverage Status](https://coveralls.io/repos/github/LinShunKang/MyPerf4J/badge.svg?branch=develop)](https://coveralls.io/github/LinShunKang/MyPerf4J?branch=develop) [![GitHub issues](https://img.shields.io/github/issues/LinShunKang/MyPerf4J.svg)](https://github.com/LinShunKang/MyPerf4J/issues) [![GitHub closed issues](https://img.shields.io/github/issues-closed/LinShunKang/MyPerf4J.svg)](https://github.com/LinShunKang/MyPerf4J/issues?q=is%3Aissue+is%3Aclosed) [![GitHub](https://img.shields.io/github/license/LinShunKang/MyPerf4J.svg)](./LICENSE)
 
 </div>
 
@@ -22,27 +22,27 @@
 
 ## 文档
 * [English Doc](https://github.com/LinShunKang/MyPerf4J/wiki/English-Doc)
-* [中文文档](https://github.com/LinShunKang/MyPerf4J/wiki/Chinese-Doc)    
-    
+* [中文文档](https://github.com/LinShunKang/MyPerf4J/wiki/Chinese-Doc)
+
 ## 监控指标
 MyPerf4J 为每个应用收集数十个监控指标，所有的监控指标都是实时采集和展现的。
 
 下面是 MyPerf4J 目前支持的监控指标列表:
 - **[Method Metrics](https://grafana.com/dashboards/7766)**<br/>
-[RPS，Count，Avg，Min，Max，StdDev，TP50, TP90, TP95, TP99, TP999, TP9999, TP100](https://github.com/LinShunKang/MyPerf4J/wiki/%E6%8C%87%E6%A0%87#method-metrics)
-![Markdown](https://raw.githubusercontent.com/LinShunKang/Objects/master/MyPerf4J-InfluxDB-Method_Show_Operation.gif)
+  [RPS，Count，Avg，Min，Max，StdDev，TP50, TP90, TP95, TP99, TP999, TP9999, TP100](https://github.com/LinShunKang/MyPerf4J/wiki/%E6%8C%87%E6%A0%87#method-metrics)
+  ![Markdown](https://raw.githubusercontent.com/LinShunKang/Objects/master/MyPerf4J-InfluxDB-Method_Show_Operation.gif)
 
 - **[JVM Metrics](https://grafana.com/dashboards/8787)**<br/>
-[Thread](https://github.com/LinShunKang/MyPerf4J/wiki/%E6%8C%87%E6%A0%87#jvm-thread-metrics)，[Memory](https://github.com/LinShunKang/MyPerf4J/wiki/%E6%8C%87%E6%A0%87#jvm-memory-metrics)，[ByteBuff](https://github.com/LinShunKang/MyPerf4J/wiki/%E6%8C%87%E6%A0%87#jvm-bytebuff-metrics)，[GC](https://github.com/LinShunKang/MyPerf4J/wiki/%E6%8C%87%E6%A0%87#jvm-gc-metrics)，[Class](https://github.com/LinShunKang/MyPerf4J/wiki/%E6%8C%87%E6%A0%87#jvm-class-metrics)，[Compilation](https://github.com/LinShunKang/MyPerf4J/wiki/%E6%8C%87%E6%A0%87#jvm-compilation-metrics)，[FileDescriptor](https://github.com/LinShunKang/MyPerf4J/wiki/%E6%8C%87%E6%A0%87#jvm-filedescriptor-metrics)
-![Markdown](https://github.com/LinShunKang/Objects/blob/master/images/JVM_Metrics_Dashboard_V2.png?raw=true)
+  [Thread](https://github.com/LinShunKang/MyPerf4J/wiki/%E6%8C%87%E6%A0%87#jvm-thread-metrics)，[Memory](https://github.com/LinShunKang/MyPerf4J/wiki/%E6%8C%87%E6%A0%87#jvm-memory-metrics)，[ByteBuff](https://github.com/LinShunKang/MyPerf4J/wiki/%E6%8C%87%E6%A0%87#jvm-bytebuff-metrics)，[GC](https://github.com/LinShunKang/MyPerf4J/wiki/%E6%8C%87%E6%A0%87#jvm-gc-metrics)，[Class](https://github.com/LinShunKang/MyPerf4J/wiki/%E6%8C%87%E6%A0%87#jvm-class-metrics)，[Compilation](https://github.com/LinShunKang/MyPerf4J/wiki/%E6%8C%87%E6%A0%87#jvm-compilation-metrics)，[FileDescriptor](https://github.com/LinShunKang/MyPerf4J/wiki/%E6%8C%87%E6%A0%87#jvm-filedescriptor-metrics)
+  ![Markdown](https://github.com/LinShunKang/Objects/blob/master/images/JVM_Metrics_Dashboard_V2.png?raw=true)
 
-    > 想知道如何实现上述效果？请先按照[快速启动](https://github.com/LinShunKang/MyPerf4J#%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8)的描述启动应用，再按照[这里](https://github.com/LinShunKang/MyPerf4J/wiki/InfluxDB_)的描述进行安装配置即可。
+  > 想知道如何实现上述效果？请先按照[快速启动](https://github.com/LinShunKang/MyPerf4J#%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8)的描述启动应用，再按照[这里](https://github.com/LinShunKang/MyPerf4J/wiki/InfluxDB_)的描述进行安装配置即可。
 
 ## 快速启动
 MyPerf4J 采用 JavaAgent 配置方式，**透明化**接入应用，对应用代码完全**没有侵入**。
 
 ### 下载
-* 下载并解压 [MyPerf4J-ASM.zip](https://github.com/LinShunKang/Objects/blob/master/zips/CN/MyPerf4J-ASM-3.2.0.zip?raw=true)
+* 下载并解压 [MyPerf4J-ASM.zip](https://github.com/LinShunKang/Objects/blob/master/zips/CN/MyPerf4J-ASM-3.6.0.zip?raw=true)
 * 阅读解压出的 `README` 文件
 * 修改解压出的 `MyPerf4J.properties` 配置文件中 `app_name`、`metrics.log.xxx` 和 `filter.packages.include` 的配置值
 
@@ -54,6 +54,8 @@ MyPerf4J 采用 JavaAgent 配置方式，**透明化**接入应用，对应用�
 * -DMyPerf4JPropFile=/path/to/MyPerf4J.properties
 
 > 形如：java -javaagent:/path/to/MyPerf4J-ASM.jar -DMyPerf4JPropFile=/path/to/MyPerf4J.properties `-jar yourApp.jar`
+>
+> 注意：如果您使用 JDK9 及其之上的版本，请额外添加 `--add-opens java.base/java.lang=ALL-UNNAMED`
 
 ### 运行
 启动应用，监控日志输出到 /path/to/log/method_metrics.log:
@@ -100,10 +102,16 @@ DemoDAO.getId2()             DynamicProxy          DAO        0.00%     2176    
 <img src="https://github.com/LinShunKang/Objects/blob/master/logos/dianzhang_303x303.jpeg?raw=true" width="80" height="80"/>
 </div>
 
+## 鸣谢
+感谢 JetBrains [OpenSourceSupport](https://www.jetbrains.com/community/opensource/#support) 所提供的支持 : )
+<div align="center">
+<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" width="200" height="200"/>
+</div>
+
 ## 项目捐赠
 如果 MyPerf4J 对您有帮助，可以使用微信扫描下面的赞赏码，请我喝杯咖啡 : )
 <div align="center">
-<img src="https://github.com/LinShunKang/Objects/blob/master/logos/WechatIMG16.jpeg?raw=true" width="260" height="260"/>
+<img src="https://github.com/LinShunKang/Objects/blob/master/logos/WechatIMG16.jpeg?raw=true" width="200" height="200"/>
 </div>
 
 ## 参考项目

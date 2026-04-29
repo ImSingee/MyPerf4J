@@ -1,10 +1,12 @@
 package cn.myperf4j.core;
 
+import cn.myperf4j.base.Scheduler;
 import cn.myperf4j.base.Version;
 import cn.myperf4j.base.config.FilterConfig;
 import cn.myperf4j.base.config.HttpServerConfig;
 import cn.myperf4j.base.config.LevelMappingFilter;
 import cn.myperf4j.base.config.MetricsConfig;
+import cn.myperf4j.base.config.MyProperties;
 import cn.myperf4j.base.config.ProfilingConfig;
 import cn.myperf4j.base.config.ProfilingFilter;
 import cn.myperf4j.base.config.RecorderConfig;
@@ -15,14 +17,12 @@ import cn.myperf4j.base.http.HttpResponse;
 import cn.myperf4j.base.http.server.Dispatcher;
 import cn.myperf4j.base.http.server.SimpleHttpServer;
 import cn.myperf4j.base.metric.exporter.MethodMetricsExporter;
-import cn.myperf4j.base.util.concurrent.ExecutorManager;
 import cn.myperf4j.base.util.Logger;
-import cn.myperf4j.base.config.MyProperties;
 import cn.myperf4j.base.util.NumUtils;
 import cn.myperf4j.base.util.StrUtils;
+import cn.myperf4j.base.util.concurrent.ExecutorManager;
 import cn.myperf4j.core.recorder.AbstractRecorderMaintainer;
 import cn.myperf4j.core.scheduler.JvmMetricsScheduler;
-import cn.myperf4j.base.Scheduler;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,12 +53,13 @@ import static cn.myperf4j.base.metric.exporter.MetricsExporterFactory.getClassMe
 import static cn.myperf4j.base.metric.exporter.MetricsExporterFactory.getCompilationExporter;
 import static cn.myperf4j.base.metric.exporter.MetricsExporterFactory.getFileDescExporter;
 import static cn.myperf4j.base.metric.exporter.MetricsExporterFactory.getGcMetricsExporter;
+import static cn.myperf4j.base.metric.exporter.MetricsExporterFactory.getGcMetricsV3Exporter;
 import static cn.myperf4j.base.metric.exporter.MetricsExporterFactory.getMemoryMetricsExporter;
 import static cn.myperf4j.base.metric.exporter.MetricsExporterFactory.getMethodMetricsExporter;
 import static cn.myperf4j.base.metric.exporter.MetricsExporterFactory.getThreadMetricsExporter;
-import static cn.myperf4j.base.util.net.NetUtils.isPortAvailable;
 import static cn.myperf4j.base.util.StrUtils.splitAsList;
 import static cn.myperf4j.base.util.SysProperties.LINE_SEPARATOR;
+import static cn.myperf4j.base.util.net.NetUtils.isPortAvailable;
 
 /**
  * Created by LinShunkang on 2018/4/11
@@ -169,10 +170,9 @@ public abstract class AbstractBootstrap {
     private boolean initProperties() {
         final String configFilePath = System.getProperty(PRO_FILE_NAME, DEFAULT_PRO_FILE);
         try (InputStream in = new FileInputStream(configFilePath)) {
-            Properties properties = new Properties();
+            final Properties properties = new Properties();
             properties.load(in);
-
-            properties.put(PROPERTIES_FILE_DIR.key(), getConfigFileDir(configFilePath));
+            properties.put(PROPERTIES_FILE_DIR.key(), parseConfigFileDir(configFilePath));
             return MyProperties.initial(properties);
         } catch (IOException e) {
             Logger.error("AbstractBootstrap.initProperties()", e);
@@ -180,13 +180,8 @@ public abstract class AbstractBootstrap {
         return false;
     }
 
-    private String getConfigFileDir(String configFilePath) {
-        if (System.getProperty("os.name").startsWith("windows")) {
-            final int idx = configFilePath.lastIndexOf('\\');
-            return configFilePath.substring(0, idx + 1);
-        }
-
-        final int idx = configFilePath.lastIndexOf('/');
+    private String parseConfigFileDir(String configFilePath) {
+        final int idx = configFilePath.lastIndexOf(File.separatorChar);
         return configFilePath.substring(0, idx + 1);
     }
 
@@ -284,7 +279,6 @@ public abstract class AbstractBootstrap {
                     Logger.warn("MethodLevelMapping is not correct: " + mappingPair);
                     continue;
                 }
-
                 LevelMappingFilter.putLevelMapping(pairs.get(0), getMappingExpList(pairs.get(1)));
             }
             return true;
@@ -334,23 +328,23 @@ public abstract class AbstractBootstrap {
 
     private void addProfilingParams0(RecorderConfig recorderConf, String profilingParamFile) {
         try (InputStream in = new FileInputStream(profilingParamFile)) {
-            Properties properties = new Properties();
+            final Properties properties = new Properties();
             properties.load(in);
 
-            Set<String> keys = properties.stringPropertyNames();
+            final Set<String> keys = properties.stringPropertyNames();
             for (String key : keys) {
-                String value = properties.getProperty(key);
+                final String value = properties.getProperty(key);
                 if (value == null) {
                     continue;
                 }
 
-                List<String> strList = splitAsList(value, ':');
+                final List<String> strList = splitAsList(value, ':');
                 if (strList.size() != 2) {
                     continue;
                 }
 
-                int timeThreshold = NumUtils.parseInt(strList.get(0).trim(), 1000);
-                int outThresholdCount = NumUtils.parseInt(strList.get(1).trim(), 64);
+                final int timeThreshold = NumUtils.parseInt(strList.get(0).trim(), 1000);
+                final int outThresholdCount = NumUtils.parseInt(strList.get(1).trim(), 64);
                 recorderConf.addProfilingParam(key.replace('.', '/'), timeThreshold, outThresholdCount);
             }
         } catch (Exception e) {
@@ -402,6 +396,7 @@ public abstract class AbstractBootstrap {
         return new JvmMetricsScheduler(
                 getClassMetricsExporter(exporter),
                 getGcMetricsExporter(exporter),
+                getGcMetricsV3Exporter(exporter),
                 getMemoryMetricsExporter(exporter),
                 getBufferPoolMetricsExporter(exporter),
                 getThreadMetricsExporter(exporter),
@@ -414,7 +409,7 @@ public abstract class AbstractBootstrap {
         return new Scheduler() {
             @Override
             public void run(long lastTimeSliceStartTime, long millTimeSlice) {
-                RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
+                final RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
                 if (bean.getUptime() >= 60 * 60 * 1000) { //60min
                     MethodMetricsHistogram.buildSysGenProfilingFile();
                 }

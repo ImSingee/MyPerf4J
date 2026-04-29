@@ -14,24 +14,15 @@ import static cn.myperf4j.base.util.LineProtocolUtils.processTagOrField;
  */
 public final class InfluxJvmCompilationMetricsFormatter implements JvmCompilationMetricsFormatter {
 
-    private static final ThreadLocal<StringBuilder> SB_TL = new ThreadLocal<StringBuilder>() {
-        @Override
-        protected StringBuilder initialValue() {
-            return new StringBuilder(128);
-        }
-    };
-
     @Override
     public String format(List<JvmCompilationMetrics> metricsList, long startMillis, long stopMillis) {
-        StringBuilder sb = SB_TL.get();
+        final StringBuilder sb = SB_TL.get();
         try {
-            long startNanos = startMillis * 1000 * 1000L;
-            for (int i = 0; i < metricsList.size(); ++i) {
-                JvmCompilationMetrics metrics = metricsList.get(i);
-                appendLineProtocol(metrics, startNanos, sb);
-                sb.append('\n');
+            final long startNanos = startMillis * 1000 * 1000L;
+            for (int i = 0, size = metricsList.size(); i < size; ++i) {
+                appendLineProtocol(metricsList.get(i), startNanos, sb);
             }
-            return sb.substring(0, sb.length() - 1);
+            return sb.substring(0, Math.max(0, sb.length() - 1));
         } finally {
             sb.setLength(0);
         }
@@ -43,6 +34,6 @@ public final class InfluxJvmCompilationMetricsFormatter implements JvmCompilatio
                 .append(",host=").append(processTagOrField(getLocalhostName()))
                 .append(" Time=").append(metrics.getTime()).append('i')
                 .append(",TotalTime=").append(metrics.getTotalTime()).append('i')
-                .append(' ').append(startNanos);
+                .append(' ').append(startNanos).append('\n');
     }
 }
